@@ -35,6 +35,7 @@
         DivisaoToken,
         AbreParentesisToken,
         FechaParentesesToken,
+        SeparadorToken,
         BadToken,
         EndOfFileToken
     }
@@ -129,6 +130,8 @@
                 return new SintaxeToken(SintaxeTipo.AbreParentesisToken, _posicao++, "(", null);
             else if (Atual == ')')
                 return new SintaxeToken(SintaxeTipo.FechaParentesesToken, _posicao++, ")", null);
+            else if (Atual == ';')
+                return new SintaxeToken(SintaxeTipo.SeparadorToken, _posicao++, ";", null)
             return new SintaxeToken(SintaxeTipo.BadToken, _posicao++, _texto.Substring(_posicao -1,1), null);
         }
     }
