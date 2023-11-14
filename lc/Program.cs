@@ -16,20 +16,20 @@
         {
             while (true) { 
                 Console.Write("$ ");
-                var linha = Console.ReadLine();
-                if (string.IsNullOrWhiteSpace(linha))
+                var Line = Console.ReadLine();
+                if (string.IsNullOrWhiteSpace(Line))
                     return;
 
-                var  lexer = new Lexer(linha);
+                var  lexer = new Lexer(Line);
                 while(true)
                 {
-                    var token = lexer.ProximoToken();
-                    if (token.Tipo == SintaxeTipo.EndOfFileToken)
+                    var token = lexer.NextToken();
+                    if (token.Kind == SyntaxKind.EndOfFileToken)
                         break;
 
-                    Console.Write($"{token.Tipo}: '{token.Texto}'");
-                    if (token.Valor != null)
-                        Console.Write($" {token.Valor}");
+                    Console.Write($"{token.Kind}: '{token.Text}'");
+                    if (token.Value != null)
+                        Console.Write($" {token.Value}");
 
                     Console.WriteLine();
                 }
@@ -37,24 +37,24 @@
         }
     }
 
-    enum SintaxeTipo
+    enum SyntaxKind
     {
-        NumeroToken,
-        EspacoToken,
-        AdicaoToken,
-        SubtracaoToken,
-        MultiplicacaoToken,
-        DivisaoToken,
-        AbreParentesisToken,
-        FechaParentesesToken,
-        SeparadorToken,
+        NumberToken,
+        WhitespaceToken,
+        PlusToken,
+        MinusToken,
+        StarToken,
+        SlashToken,
+        OpenParenthesisToken,
+        CloseParenthesisToken,
+        SeparatorToken,
         BadToken,
         EndOfFileToken,
-        ExpressaoNumero,
-        ExpressaoBinaria
+        NumberExpression,
+        BinaryExpression
     }
 
-    abstract class SintaxeExpressão  : SyntaxNode
+    abstract class ExpressionSyntax : SyntaxNode
     {
     }
 }

@@ -1,17 +1,17 @@
 ﻿namespace lc
 {
-    sealed class BinaryExpressionSyntax : SintaxeExpressão
+    sealed class BinaryExpressionSyntax : ExpressionSyntax
     {
-        public BinaryExpressionSyntax(SintaxeExpressão esquerda, SintaxeToken operadorToken, SintaxeExpressão direita)
+        public BinaryExpressionSyntax(ExpressionSyntax left, SyntaxToken operatorToken, ExpressionSyntax right)
         {
-            Esquerda = esquerda;
-            OperadorToken = operadorToken;
-            Direita = direita;
+            Left = left;
+            OperatorToken = operatorToken;
+            Right = right;
         }
 
-        public override SintaxeTipo Tipo => SintaxeTipo.ExpressaoBinaria;
-        public SintaxeExpressão Esquerda { get; }
-        public SintaxeToken OperadorToken { get; }
-        public SintaxeExpressão Direita { get; }
+        public override SyntaxKind Kind => SyntaxKind.BinaryExpression;
+        public ExpressionSyntax Left { get; }
+        public SyntaxToken OperatorToken { get; }
+        public ExpressionSyntax Right { get; }
     }
 }

@@ -2,80 +2,80 @@
 {
     internal class Lexer
     {
-        private readonly string _texto;
-        private int _posicao;
+        private readonly string _text;
+        private int _position;
 
-        public Lexer(string texto)
+        public Lexer(string text)
         {
-            _texto = texto; 
+            _text = text; 
         }
 
-        private char Atual
+        private char Current
         {
             get
             {
-                if (_posicao >= _texto.Length)
+                if (_position >= _text.Length)
                     return '\0';
 
-                return _texto[_posicao];
+                return _text[_position];
             }
         }
 
-        private void Proximo()
+        private void Next()
         {
-            _posicao++;
+            _position++;
         }
 
-        public SintaxeToken ProximoToken()
+        public SyntaxToken NextToken()
         {
             // <numeros>
             // + - * / ( )
             // <espaço>
 
-            if (_posicao >= _texto.Length)
+            if (_position >= _text.Length)
             {
-                return new SintaxeToken(SintaxeTipo.EndOfFileToken, _posicao, "\0", null);
+                return new SyntaxToken(SyntaxKind.EndOfFileToken, _position, "\0", null);
             }
 
-            if (char.IsDigit(Atual))
+            if (char.IsDigit(Current))
             {
-                var inicio = _posicao;
+                var start = _position;
 
-                while (char.IsDigit(Atual))
-                    Proximo();
+                while (char.IsDigit(Current))
+                    Next();
 
-                var length = _posicao - inicio;
-                var texto = _texto.Substring(inicio, length);
-                return new SintaxeToken(SintaxeTipo.NumeroToken, inicio, texto, null);
+                var length = _position - start;
+                var text = _text.Substring(start, length);
+                return new SyntaxToken(SyntaxKind.NumberToken, start, text, null);
             }
 
-            if (char.IsWhiteSpace(Atual)) 
+            if (char.IsWhiteSpace(Current)) 
             {
-                var inicio = _posicao;
+                var start = _position;
 
-                while (char.IsWhiteSpace(Atual))
-                    Proximo();
+                while (char.IsWhiteSpace(Current))
+                    Next();
 
-                var length = _posicao - inicio;
-                var texto = _texto.Substring(inicio, length);
-                return new SintaxeToken(SintaxeTipo.EspacoToken, inicio, texto, null);
+                var length = _position - start;
+                var texto = _text.Substring(start, length);
+                return new SyntaxToken(SyntaxKind.WhitespaceToken, start, texto, null);
             }
 
-            if (Atual == '+')
-                return new SintaxeToken(SintaxeTipo.AdicaoToken, _posicao++, "+", null);
-            else if (Atual == '-')
-                return new SintaxeToken(SintaxeTipo.SubtracaoToken, _posicao++, "-", null);
-            else if (Atual == '*')
-                return new SintaxeToken(SintaxeTipo.MultiplicacaoToken, _posicao++, "*", null);
-            else if (Atual == '/')
-                return new SintaxeToken(SintaxeTipo.DivisaoToken, _posicao++, "/", null);
-            else if (Atual == '(')
-                return new SintaxeToken(SintaxeTipo.AbreParentesisToken, _posicao++, "(", null);
-            else if (Atual == ')')
-                return new SintaxeToken(SintaxeTipo.FechaParentesesToken, _posicao++, ")", null);
-            else if (Atual == ';')
-                return new SintaxeToken(SintaxeTipo.SeparadorToken, _posicao++, ";", null);
-            return new SintaxeToken(SintaxeTipo.BadToken, _posicao++, _texto.Substring(_posicao -1,1), null);
+            if (Current == '+')
+                return new SyntaxToken(SyntaxKind.PlusToken, _position++, "+", null);
+            else if (Current == '-')
+                return new SyntaxToken(SyntaxKind.MinusToken, _position++, "-", null);
+            else if (Current == '*')
+                return new SyntaxToken(SyntaxKind.StarToken, _position++, "*", null);
+            else if (Current == '/')
+                return new SyntaxToken(SyntaxKind.SlashToken, _position++, "/", null);
+            else if (Current == '(')
+                return new SyntaxToken(SyntaxKind.OpenParenthesisToken, _position++, "(", null);
+            else if (Current == ')')
+                return new SyntaxToken(SyntaxKind.CloseParenthesisToken, _position++, ")", null);
+            else if (Current == ';')
+                return new SyntaxToken(SyntaxKind.SeparatorToken, _position++, ";", null);
+            return new SyntaxToken(SyntaxKind.BadToken, _position++, _text.Substring(_position -1,1), null);
         }
     }
 }

@@ -1,14 +1,14 @@
 ﻿namespace lc
 {
-    sealed class NumberExpressionSyntax : SintaxeExpressão
+    sealed class NumberExpressionSyntax : ExpressionSyntax
     {
-        public NumberExpressionSyntax(SintaxeToken numeroToken)
+        public NumberExpressionSyntax(SyntaxToken numberToken)
         {
-            NumeroToken = numeroToken;
+            NumberToken = numberToken;
         }
 
-        public override SintaxeTipo Tipo => SintaxeTipo.ExpressaoNumero;
+        public override SyntaxKind Kind => SyntaxKind.NumberExpression;
 
-        public SintaxeToken NumeroToken { get; }
+        public SyntaxToken NumberToken { get; }
     }
 }

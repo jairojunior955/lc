@@ -2,73 +2,73 @@
 {
     internal class Parser
     {
-        private readonly SintaxeToken[] _tokens;
-        private int _posicao;
+        private readonly SyntaxToken[] _tokens;
+        private int _position;
 
-        public Parser(string texto)
+        public Parser(string text)
         {
-            var tokens = new List<SintaxeToken>();
+            var tokens = new List<SyntaxToken>();
 
 
-            var lexer = new Lexer(texto);
-            SintaxeToken token;
+            var lexer = new Lexer(text);
+            SyntaxToken token;
             do
             {
-                token = lexer.ProximoToken();
+                token = lexer.NextToken();
 
-                if (token.Tipo != SintaxeTipo.EspacoToken &&
-                    token.Tipo != SintaxeTipo.BadToken)
+                if (token.Kind != SyntaxKind.WhitespaceToken &&
+                    token.Kind != SyntaxKind.BadToken)
                 {
                     tokens.Add(token);
                 }
-            } while (token.Tipo != SintaxeTipo.EndOfFileToken);
+            } while (token.Kind != SyntaxKind.EndOfFileToken);
 
             _tokens = tokens.ToArray();
         }
 
-        private SintaxeToken Peek(int offset)
+        private SyntaxToken Peek(int offset)
         {
-            var index = _posicao + offset;
+            var index = _position + offset;
             if (index >= _tokens.Length)
                 return _tokens[_tokens.Length - 1];
             return _tokens[index];
         }
 
-        private SintaxeToken Atual => Peek(0);
+        private SyntaxToken Current => Peek(0);
 
-        private SintaxeToken ProximoToken()
+        private SyntaxToken NextToken()
         {
-            var atual = Atual;
-            _posicao++;
-            return atual;
+            var current = Current;
+            _position++;
+            return current;
         }
 
-        private SintaxeToken Combinado(SintaxeTipo tipo)
+        private SyntaxToken Match(SyntaxKind kind)
         {
-            if (Atual.Tipo == tipo)
+            if (Current.Kind == kind)
             {
-                return ProximoToken();
+                return NextToken();
             }
-            return new SintaxeToken(tipo, Atual.Posicao, null, null);
+            return new SyntaxToken(kind, Current.Position, null, null);
         }
 
-        public SintaxeExpressão Parse()
+        public ExpressionSyntax Parse()
         {
-            var esquerda = ExpressaoParsePrimaria();
-            while (Atual.Tipo == SintaxeTipo.AdicaoToken ||
-                   Atual.Tipo == SintaxeTipo.SubtracaoToken)
+            var left = ParsePrimaryExpression();
+            while (Current.Kind == SyntaxKind.PlusToken ||
+                   Current.Kind == SyntaxKind.MinusToken)
             {
-                var operadorToken = ProximoToken();
-                var direita = ExpressaoParsePrimaria();
-                esquerda = new BinaryExpressionSyntax(esquerda, operadorToken, direita);
+                var operatorToken = NextToken();
+                var right = ParsePrimaryExpression();
+                left = new BinaryExpressionSyntax(left, operatorToken, right);
             }
 
-            return esquerda;
+            return left;
         }
 
-        private SintaxeExpressão ExpressaoParsePrimaria()
+        private ExpressionSyntax ParsePrimaryExpression()
         {
-            var numeroToken = Combinado(SintaxeTipo.NumeroToken);
+            var numeroToken = Match(SyntaxKind.NumberToken);
             return new NumberExpressionSyntax(numeroToken);
         }
     }

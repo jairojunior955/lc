@@ -2,6 +2,6 @@
 {
     abstract class SyntaxNode
     {
-        public abstract SintaxeTipo Tipo { get; }
+        public abstract SyntaxKind Kind { get; }
     }
 }
